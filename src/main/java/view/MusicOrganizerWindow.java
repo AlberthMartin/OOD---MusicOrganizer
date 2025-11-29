@@ -1,5 +1,8 @@
 package view;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
@@ -37,10 +40,17 @@ public class MusicOrganizerWindow extends Application {
     private TextArea messages;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException {
         controller = new MusicOrganizerController();
         if (args.length == 0) {
-            controller.loadSoundClips("/Users/alberthmartin/Downloads/OOD---MusicOrganizer/src/main/resources/sample-sound");
+            URL resourceUrl = MusicOrganizerWindow.class.getClassLoader().getResource("sample-sound");
+            if (resourceUrl != null) {
+                File folder = new File(resourceUrl.toURI());
+                controller.loadSoundClips(folder.getAbsolutePath());
+            } else {
+                System.out.println("Could not find sample-sound folder in resources");
+            }
+            controller.loadSoundClips("sample-sound");
         } else if (args.length == 1) {
             controller.loadSoundClips(args[0]);
         } else {
